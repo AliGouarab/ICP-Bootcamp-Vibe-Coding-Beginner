@@ -1,20 +1,20 @@
 // Example 1: String ownership
 fn example1() {
     let s1 = String::from("hello");
-    let s2 = s1;
+    let s2 = s1.clone(); // Clone to preserve s1
 
-    println!("{}, world!", s1); // Error: s1 has been moved
+    println!("{}, world!", s1); // Now s1 is still valid
 }
 
 // Example 2: Function ownership
 fn example2() {
     let s = String::from("hello");
-    takes_ownership(s);
+    takes_ownership(&s); // Borrow instead of move
 
-    println!("After function call: {}", s); // Error: s has been moved
+    println!("After function call: {}", s); // Now s is still valid
 }
 
-fn takes_ownership(some_string: String) {
+fn takes_ownership(some_string: &String) {
     println!("Inside function: {}", some_string);
 }
 
@@ -22,22 +22,21 @@ fn takes_ownership(some_string: String) {
 fn example3() {
     let v = vec![1, 2, 3, 4, 5];
 
-    for i in v {
+    for i in &v { // Iterate by reference to avoid consuming `v`
         println!("{}", i);
     }
 
-    // Calculate and print the sum of elements in v
-    let sum: i32 = v.iter().sum(); // Error: v has been moved in the for loop
+    let sum: i32 = v.iter().sum(); // `v` is still valid
     println!("Sum: {}", sum);
 }
 
 fn main() {
     println!("Running Example 1:");
     example1();
-    
+
     println!("\nRunning Example 2:");
     example2();
-    
+
     println!("\nRunning Example 3:");
     example3();
 }
